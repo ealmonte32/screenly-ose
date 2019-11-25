@@ -8,6 +8,7 @@ import re
 import requests
 import string
 import sh
+import time
 
 from datetime import datetime, timedelta
 from distutils.util import strtobool
@@ -86,6 +87,7 @@ def get_node_ip():
     try:
         default_interface = gateways()['default'][AF_INET][1]
         my_ip = ifaddresses(default_interface)[AF_INET][0]['addr']
+        time.sleep(5)
         return my_ip
     except (KeyError, ValueError):
         raise Exception("Unable to resolve local IP address.")
