@@ -7,6 +7,7 @@ __license__ = "Dual License: GPLv2 and Commercial License"
 
 import json
 import pydbus
+import psutil
 import re
 import sh
 import shutil
@@ -25,7 +26,7 @@ from os import getenv, listdir, makedirs, mkdir, path, remove, rename, statvfs, 
 from subprocess import check_output
 from urlparse import urlparse
 
-from flask import Flask, make_response, render_template, request, send_from_directory, url_for, jsonify
+from flask import Flask, escape, make_response, render_template, request, send_from_directory, url_for, jsonify
 from flask_cors import CORS
 from flask_restful_swagger_2 import Api, Resource, Schema, swagger
 from flask_swagger_ui import get_swaggerui_blueprint
@@ -52,14 +53,20 @@ from lib.utils import is_balena_app, is_demo_node, is_wott_integrated, get_wott_
 from settings import CONFIGURABLE_SETTINGS, DEFAULTS, LISTEN, PORT, settings, ZmqPublisher, ZmqCollector
 
 HOME = getenv('HOME', '/home/pi')
-CELERY_RESULT_BACKEND = getenv('CELERY_RESULT_BACKEND', 'rpc://')
-CELERY_BROKER_URL = getenv('CELERY_BROKER_URL', 'amqp://')
+CELERY_RESULT_BACKEND = getenv('CELERY_RESULT_BACKEND', 'redis://localhost:6379/0')
+CELERY_BROKER_URL = getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0')
+CELERY_TASK_RESULT_EXPIRES = timedelta(hours=6)
 
 app = Flask(__name__)
 CORS(app)
 api = Api(app, api_version="v1", title="Screenly OSE API")
 
-celery = Celery(app.name, backend=CELERY_RESULT_BACKEND, broker=CELERY_BROKER_URL)
+celery = Celery(
+    app.name,
+    backend=CELERY_RESULT_BACKEND,
+    broker=CELERY_BROKER_URL,
+    result_expires=CELERY_TASK_RESULT_EXPIRES
+)
 
 
 ################################
@@ -409,7 +416,7 @@ def prepare_asset(request, unique_name=False):
     if not all([get('name'), get('uri'), get('mimetype')]):
         raise Exception("Not enough information provided. Please specify 'name', 'uri', and 'mimetype'.")
 
-    name = get('name')
+    name = escape(get('name'))
     if unique_name:
         with db.conn(settings['database']) as conn:
             names = assets_helper.get_names_of_assets(conn)
@@ -432,7 +439,7 @@ def prepare_asset(request, unique_name=False):
         'nocache': get('nocache'),
     }
 
-    uri = get('uri').encode('utf-8')
+    uri = escape(get('uri').encode('utf-8'))
 
     if uri.startswith('/'):
         if not path.isfile(uri):
@@ -498,7 +505,7 @@ def prepare_asset_v1_2(request_environ, asset_id=None, unique_name=False):
         raise Exception(
             "Not enough information provided. Please specify 'name', 'uri', 'mimetype', 'is_enabled', 'start_date' and 'end_date'.")
 
-    name = get('name')
+    name = escape(get('name'))
     if unique_name:
         with db.conn(settings['database']) as conn:
             names = assets_helper.get_names_of_assets(conn)
@@ -519,7 +526,7 @@ def prepare_asset_v1_2(request_environ, asset_id=None, unique_name=False):
         'nocache': get('nocache')
     }
 
-    uri = get('uri')
+    uri = escape(get('uri'))
 
     if uri.startswith('/'):
         if not path.isfile(uri):
@@ -595,6 +602,64 @@ def prepare_usb_asset(filepath, **kwargs):
         'start_date': kwargs['start_date'],
         'uri': filepath,
     }
+
+
+def prepare_default_asset(**kwargs):
+    if kwargs['mimetype'] not in ['image', 'video', 'webpage']:
+        return
+
+    asset_id = 'default_{}'.format(uuid.uuid4().hex)
+    duration = int(get_video_duration(kwargs['uri']).total_seconds()) if "video" == kwargs['mimetype'] else kwargs['duration']
+
+    return {
+        'asset_id': asset_id,
+        'duration': duration,
+        'end_date': kwargs['end_date'],
+        'is_active': 1,
+        'is_enabled': True,
+        'is_processing': 0,
+        'mimetype': kwargs['mimetype'],
+        'name': kwargs['name'],
+        'nocache': 0,
+        'play_order': 0,
+        'skip_asset_check': 0,
+        'start_date': kwargs['start_date'],
+        'uri': kwargs['uri']
+    }
+
+
+def add_default_assets():
+    settings.load()
+
+    datetime_now = datetime.now()
+    default_asset_settings = {
+        'start_date': datetime_now,
+        'end_date': datetime_now.replace(year=datetime_now.year + 6),
+        'duration': settings['default_duration']
+    }
+
+    default_assets_yaml = path.join(HOME, '.screenly/default_assets.yml')
+
+    with open(default_assets_yaml, 'r') as yaml_file:
+        default_assets = yaml.safe_load(yaml_file).get('assets')
+        with db.conn(settings['database']) as conn:
+            for default_asset in default_assets:
+                default_asset_settings.update({
+                    'name': default_asset.get('name'),
+                    'uri': default_asset.get('uri'),
+                    'mimetype': default_asset.get('mimetype')
+                })
+                asset = prepare_default_asset(**default_asset_settings)
+                if asset:
+                    assets_helper.create(conn, asset)
+
+
+def remove_default_assets():
+    settings.load()
+    with db.conn(settings['database']) as conn:
+        for asset in assets_helper.read(conn):
+            if asset['asset_id'].startswith('default_'):
+                assets_helper.delete(conn, asset['asset_id'])
 
 
 def update_asset(asset, data):
@@ -1402,7 +1467,8 @@ class Info(Resource):
             'loadavg': diagnostics.get_load_avg()['15 min'],
             'free_space': free_space,
             'display_info': diagnostics.get_monitor_status(),
-            'display_power': diagnostics.get_display_power()
+            'display_power': diagnostics.get_display_power(),
+            'up_to_date': is_up_to_date()
         }
 
 
@@ -1550,7 +1616,7 @@ else:
     SWAGGER_URL = '/api/docs'
     swagger_address = getenv("SWAGGER_HOST", my_ip)
 
-    if settings['use_ssl']:
+    if settings['use_ssl'] or is_demo_node:
         API_URL = 'https://{}/api/swagger.json'.format(swagger_address)
     elif LISTEN == '127.0.0.1' or swagger_address != my_ip:
         API_URL = "http://{}/api/swagger.json".format(swagger_address)
@@ -1561,7 +1627,7 @@ else:
         SWAGGER_URL,
         API_URL,
         config={
-            'app_name': "Screenly API"
+            'app_name': "Screenly OSE API"
         }
     )
     app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
@@ -1624,9 +1690,15 @@ def settings_page():
 
                 if not value and field in ['default_duration', 'default_streaming_duration']:
                     value = str(0)
-
                 if isinstance(default, bool):
                     value = value == 'on'
+
+                if field == 'default_assets' and settings[field] != value:
+                    if value:
+                        add_default_assets()
+                    else:
+                        remove_default_assets()
+
                 settings[field] = value
 
             settings.save()
@@ -1692,6 +1764,17 @@ def system_info():
     slash = statvfs("/")
     free_space = size(slash.f_bavail * slash.f_frsize)
 
+    # Memory
+    virtual_memory = psutil.virtual_memory()
+    memory = "Total: {} | Used: {} | Free: {} | Shared: {} | Buff: {} | Available: {}".format(
+        virtual_memory.total >> 20,
+        virtual_memory.used >> 20,
+        virtual_memory.free >> 20,
+        virtual_memory.shared >> 20,
+        virtual_memory.buffers >> 20,
+        virtual_memory.available >> 20
+    )
+
     # Get uptime
     system_uptime = timedelta(seconds=diagnostics.get_uptime())
 
@@ -1721,6 +1804,7 @@ def system_info():
         loadavg=loadavg,
         free_space=free_space,
         uptime=system_uptime,
+        memory=memory,
         display_info=display_info,
         display_power=display_power,
         raspberry_model=raspberry_model,
