@@ -163,6 +163,7 @@ cd /home/pi/screenly/ansible
 
 sudo -E ansible-playbook site.yml $EXTRA_ARGS
 
+sudo apt-get autoremove -y
 sudo apt-get autoclean
 sudo apt-get clean
 sudo find /usr/share/doc -depth -type f ! -name copyright -delete
