@@ -128,10 +128,10 @@ fi
 
 if [ "$WEB_UPGRADE" = false ]; then
   set -x
-  REPOSITORY=${1:-https://github.com/screenly/screenly-ose.git}
+  REPOSITORY=${1:-https://github.com/ealmonte32/screenly-ose.git}
 else
   set -e
-  REPOSITORY=https://github.com/screenly/screenly-ose.git
+  REPOSITORY=https://github.com/ealmonte32/screenly-ose.git
 fi
 
 sudo mkdir -p /etc/ansible
@@ -156,7 +156,7 @@ else
   export MANAGE_NETWORK=false
 fi
 
-sudo pip install ansible==2.8.2
+sudo pip install ansible==2.8.8
 
 sudo -u pi ansible localhost -m git -a "repo=$REPOSITORY dest=/home/pi/screenly version=$BRANCH force=yes"
 cd /home/pi/screenly/ansible
