@@ -141,6 +141,7 @@
     state: present
     update_cache: yes
   when: not cc1plus_exist
+  poll: 30
   
 - name: Install Screenly dependencies
   apt:
@@ -163,8 +164,7 @@
       - xserver-xorg
     state: latest
     install_recommends: no
-  async: 60
-  poll: 10
+  poll: 30
 
 - name: Install systemd-sysv on Wheezy
   command: bash -c 'echo "Yes, do as I say!" | apt-get install -y --force-yes systemd-sysv'
