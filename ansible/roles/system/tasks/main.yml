@@ -162,6 +162,8 @@
       - x11-xserver-utils
       - xserver-xorg
     state: latest
+    install_recommends: no
+   poll: 10
 
 - name: Install systemd-sysv on Wheezy
   command: bash -c 'echo "Yes, do as I say!" | apt-get install -y --force-yes systemd-sysv'
