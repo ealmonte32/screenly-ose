@@ -48,7 +48,7 @@
 - name: Install pip dependencies
   pip:
     requirements: /home/pi/screenly/requirements/requirements.txt
-    extra_args: "--no-binary=:all:"
+    extra_args: "--no-cache-dir"
 
 - name: Create default assets database if does not exists
   copy:
