@@ -459,6 +459,7 @@ def asset_loop(scheduler):
 
     elif path.isfile(asset['uri']) or (not url_fails(asset['uri']) or asset['skip_asset_check']):
         name, mime, uri = asset['name'], asset['mimetype'], asset['uri']
+        name = name.replace('&amp;amp;', '&')
         logging.info('Showing asset %s (%s)', name, mime)
         logging.debug('Asset URI %s', uri)
         watchdog()
