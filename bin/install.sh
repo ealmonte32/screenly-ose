@@ -1,5 +1,8 @@
 #!/bin/bash -e
 
+# clear screen
+clear;
+
 WEB_UPGRADE=false
 BRANCH_VERSION=
 MANAGE_NETWORK=
@@ -30,8 +33,9 @@ if [ "$WEB_UPGRADE" = false ]; then
     exit 1
   fi
 
-  # Set color of logo
-  tput setaf 4
+  # Set color and make bold
+  tput setaf 6
+  tput bold
 
   cat << EOF
        _____                           __         ____  _____ ______
@@ -96,17 +100,17 @@ elif [ "$WEB_UPGRADE" = true ]; then
   fi
 
   if [ "$MANAGE_NETWORK" = false ]; then
-    NETWORK="y"
-  elif [ "$MANAGE_NETWORK" = true ]; then
     NETWORK="n"
+  elif [ "$MANAGE_NETWORK" = true ]; then
+    NETWORK="y"
   else
     echo -e "Invalid -n parameter."
     exit 1
   fi
 
-  if [ "$UPGRADE_SYSTEM" = false ]; then
+  if [ "$UPGRADE_SYSTEM" = true ]; then
     EXTRA_ARGS="--skip-tags enable-ssl,system-upgrade"
-  elif [ "$UPGRADE_SYSTEM" = true ]; then
+  elif [ "$UPGRADE_SYSTEM" = false ]; then
     EXTRA_ARGS="--skip-tags enable-ssl"
   else
     echo -e "Invalid -s parameter."
@@ -143,11 +147,11 @@ if [ ! -f /etc/locale.gen ]; then
   sudo locale-gen
 fi
 
-sudo sed -i 's/apt.screenlyapp.com/archive.raspbian.org/g' /etc/apt/sources.list
-sudo apt update -y
-sudo apt-get purge -y python-setuptools python-pip python-pyasn1
-sudo apt-get install -y python-dev git-core libffi-dev libssl-dev
-curl -s https://bootstrap.pypa.io/get-pip.py | sudo python
+sudo apt-get update -y
+#sudo apt-get purge -y python-setuptools python-pip python-pyasn1
+sudo apt-get install -y ca-certificates python-pip-whl python-pip libffi-dev libssl-dev
+#sudo apt-get install -y python-dev git-core libffi-dev libssl-dev
+#curl -s https://bootstrap.pypa.io/get-pip.py | sudo python
 
 if [ "$NETWORK" == 'y' ]; then
   export MANAGE_NETWORK=true
