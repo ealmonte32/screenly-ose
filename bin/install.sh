@@ -149,7 +149,7 @@ fi
 
 sudo apt-get update -y
 #sudo apt-get purge -y python-setuptools python-pip python-pyasn1
-sudo apt-get install -y git-core ca-certificates python-pip-whl python-pip libffi-dev libssl-dev
+sudo apt-get install -y git ca-certificates python-pip-whl python-pip libffi-dev libssl-dev
 #sudo apt-get install -y python-dev git-core libffi-dev libssl-dev
 #curl -s https://bootstrap.pypa.io/get-pip.py | sudo python
 
