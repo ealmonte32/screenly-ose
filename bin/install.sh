@@ -186,12 +186,17 @@ else
   echo "pi ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/010_pi-nopasswd > /dev/null
   sudo chmod 0440 /etc/sudoers.d/010_pi-nopasswd
 fi
-
+#######################################################################
 # Setup a new pi password if default password "raspberry" detected
+# clear any previous set variables used for password detection
+_CURRENTPISALT=''
+_CURRENTPIUSERPWD=''
+_DEFAULTPIPWD=''
+
 # currently only looking for $6$/sha512, will expand later on to all algorithms potentially used
 _CURRENTPISALT=$(sudo cat /etc/shadow | grep pi | awk -F '$' '{print $3}')
 _CURRENTPIUSERPWD=$(sudo cat /etc/shadow | grep pi | awk -F ':' '{print $2}')
-_DEFAULTPIPWD=$(mkpasswd -m sha-512 raspberry $_CURRENTPIPWDHASH)
+_DEFAULTPIPWD=$(mkpasswd -m sha-512 raspberry $_CURRENTPISALT)
 
 if [[ "$_CURRENTPIUSERPWD" == "$_DEFAULTPIPWD" ]]; then
 echo "Default raspberry pi password detected! - please change now.."
