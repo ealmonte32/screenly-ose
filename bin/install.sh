@@ -149,7 +149,7 @@ fi
 
 sudo apt-get update -y
 #sudo apt-get purge -y python-setuptools python-pip python-pyasn1
-sudo apt-get install -y git ca-certificates python-pip-whl python-pip libffi-dev libssl-dev
+sudo apt-get install -y git ca-certificates python-pip-whl python-pip libffi-dev libssl-dev whois
 #sudo apt-get install -y python-dev git-core libffi-dev libssl-dev
 #curl -s https://bootstrap.pypa.io/get-pip.py | sudo python
 
@@ -187,11 +187,20 @@ else
   sudo chmod 0440 /etc/sudoers.d/010_pi-nopasswd
 fi
 
-# Setup a new pi password
-if [ "$BRANCH" = "master" ] || [ "$BRANCH" = "production" ] && [ "$WEB_UPGRADE" = false ]; then
+# Setup a new pi password if default password "raspberry" detected
+# currently only looking for $6$/sha512, will expand later on to all algorithms potentially used
+_CURRENTPISALT=$(sudo cat /etc/shadow | grep pi | awk -F '$' '{print $3}')
+_CURRENTPIUSERPWD=$(sudo cat /etc/shadow | grep pi | awk -F ':' '{print $2}')
+_DEFAULTPIPWD=$(mkpasswd -m sha-512 raspberry $_CURRENTPIPWDHASH)
+
+if [[ "$_CURRENTPIUSERPWD" == "$_DEFAULTPIPWD" ]]; then
+echo "Default raspberry pi password detected! - please change now.."
+  if [ "$BRANCH" = "master" ] || [ "$BRANCH" = "production" ] && [ "$WEB_UPGRADE" = false ]; then
   set +e
   passwd
   set -e
+  fi
+else echo "Non-default password detected, continuing..."
 fi
 
 echo -e "Screenly version: $(git rev-parse --abbrev-ref HEAD)@$(git rev-parse --short HEAD)\n$(lsb_release -a)" > ~/version.md
