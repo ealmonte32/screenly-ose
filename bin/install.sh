@@ -181,7 +181,7 @@ sudo apt-get clean
 sudo find /usr/share/doc -depth -type f ! -name copyright -delete
 sudo find /usr/share/doc -empty -delete
 sudo rm -rf /usr/share/man /usr/share/groff /usr/share/info/* /usr/share/lintian /usr/share/linda /var/cache/man
-sudo find /usr/share/locale -type f ! -name 'en' ! -name 'de*' ! -name 'es*' ! -name 'ja*' ! -name 'fr*' ! -name 'zh*' ! -name 'locale.alias' -delete
+sudo find /usr/share/locale -type f ! -name 'en' ! -name 'de*' ! -name 'es*' ! -name 'ja*' ! -name 'fr*' ! -name 'zh*' -delete
 sudo find /usr/share/locale -mindepth 1 -maxdepth 1 ! -name 'en*' ! -name 'de*' ! -name 'es*' ! -name 'ja*' ! -name 'fr*' ! -name 'zh*' ! -name 'locale.alias' -exec rm -r {} \;
 
 cd /home/pi/screenly && git rev-parse HEAD > /home/pi/.screenly/latest_screenly_sha
