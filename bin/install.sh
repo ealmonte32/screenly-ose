@@ -8,6 +8,10 @@ BRANCH_VERSION=
 MANAGE_NETWORK=
 UPGRADE_SYSTEM=
 
+if [ -f .env ]; then
+  source .env
+fi
+
 while getopts ":w:b:n:s:" arg; do
   case "${arg}" in
     w)
@@ -87,16 +91,17 @@ EOF
   fi
 
 elif [ "$WEB_UPGRADE" = true ]; then
-
-  if [ "$BRANCH_VERSION" = "latest" ]; then
-    export DOCKER_TAG="latest"
-    BRANCH="master"
-  elif [ "$BRANCH_VERSION" = "production" ]; then
-    export DOCKER_TAG="production"
-    BRANCH="production"
-  else
-    echo -e "Invalid -b parameter."
-    exit 1
+  if [ -z "${BRANCH}" ]; then
+    if [ "$BRANCH_VERSION" = "latest" ]; then
+      export DOCKER_TAG="latest"
+      BRANCH="master"
+    elif [ "$BRANCH_VERSION" = "production" ]; then
+      export DOCKER_TAG="production"
+      BRANCH="production"
+    else
+      echo -e "Invalid -b parameter."
+      exit 1
+    fi
   fi
 
   if [ "$MANAGE_NETWORK" = false ]; then
@@ -108,9 +113,9 @@ elif [ "$WEB_UPGRADE" = true ]; then
     exit 1
   fi
 
-  if [ "$UPGRADE_SYSTEM" = true ]; then
+  if [ "$UPGRADE_SYSTEM" = false ]; then
     EXTRA_ARGS="--skip-tags enable-ssl,system-upgrade"
-  elif [ "$UPGRADE_SYSTEM" = false ]; then
+  elif [ "$UPGRADE_SYSTEM" = true ]; then
     EXTRA_ARGS="--skip-tags enable-ssl"
   else
     echo -e "Invalid -s parameter."
@@ -130,12 +135,14 @@ else
   export DEVICE_TYPE="pi1"
 fi
 
-if [ "$WEB_UPGRADE" = false ]; then
-  set -x
-  REPOSITORY=${1:-https://github.com/ealmonte32/screenly-ose.git}
-else
-  set -e
-  REPOSITORY=https://github.com/ealmonte32/screenly-ose.git
+if [ -z "${REPOSITORY}" ]; then
+  if [ "$WEB_UPGRADE" = false ]; then
+    set -x
+    REPOSITORY=${1:-https://github.com/ealmonte32/screenly-ose.git}
+  else
+    set -e
+    REPOSITORY=https://github.com/ealmonte32/screenly-ose.git
+  fi
 fi
 
 sudo mkdir -p /etc/ansible
