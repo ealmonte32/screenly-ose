@@ -60,19 +60,21 @@ EOF
     exit 1
   fi
 
-  echo && read -p "Would you like to use the experimental branch? It contains the last major changes, such as the new browser and migrating to Docker (y/N)" -n 1 -r -s EXP && echo
-  if [ "$EXP" != 'y'  ]; then
-    echo && read -p "Would you like to use the development (master) branch? You will get the latest features, but things may break. (y/N)" -n 1 -r -s DEV && echo
-    if [ "$DEV" != 'y'  ]; then
-      export DOCKER_TAG="production"
-      BRANCH="production"
+  if [ -z "${BRANCH}" ]; then
+    echo && read -p "Would you like to use the experimental branch? It contains the last major changes, such as the new browser and migrating to Docker (y/N)" -n 1 -r -s EXP && echo
+    if [ "$EXP" != 'y'  ]; then
+      echo && read -p "Would you like to use the development (master) branch? You will get the latest features, but things may break. (y/N)" -n 1 -r -s DEV && echo
+      if [ "$DEV" != 'y'  ]; then
+        export DOCKER_TAG="production"
+        BRANCH="production"
+      else
+        export DOCKER_TAG="latest"
+        BRANCH="master"
+      fi
     else
-      export DOCKER_TAG="latest"
-      BRANCH="master"
+      export DOCKER_TAG="experimental"
+      BRANCH="experimental"
     fi
-  else
-    export DOCKER_TAG="experimental"
-    BRANCH="experimental"
   fi
 
   echo && read -p "Would you like to install the WoTT agent to help you manage security of your Raspberry Pi? (y/N)" -n 1 -r -s WOTT && echo
