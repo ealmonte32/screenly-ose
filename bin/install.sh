@@ -1,8 +1,5 @@
 #!/bin/bash -e
 
-# clear screen
-clear;
-
 WEB_UPGRADE=false
 BRANCH_VERSION=
 MANAGE_NETWORK=
@@ -36,6 +33,9 @@ if [ "$WEB_UPGRADE" = false ]; then
     echo -e "Detected old installation command. Please use:\n$ bash <(curl -sL https://www.screenlyapp.com/install-ose.sh)"
     exit 1
   fi
+  
+  # clear screen
+  clear;
 
   # Set color and make bold
   tput setaf 6
