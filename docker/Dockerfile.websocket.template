@@ -1,6 +1,6 @@
 FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:buster-run
-
-RUN install_packages \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+#RUN install_packages \
         build-essential \
         ca-certificates \
         python-dev \
@@ -16,6 +16,9 @@ RUN pip install
     gevent-websocket==0.10.1 \
     gevent==1.2.2 \
     pyzmq==16.0.2 --no-cache-dir
+    
+#initramfs compress as xz and modules as dep
+COPY tests/config/initramfs.conf /etc/initramfs-tools/initramfs.conf 
 
 COPY . /tmp/screenly
 
