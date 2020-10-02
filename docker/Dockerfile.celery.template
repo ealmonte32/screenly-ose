@@ -12,12 +12,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         python-dev \
         python-pip-whl \
         python-pip \
-        python-imaging \
+        python-pil \
         python-netifaces \
         python-simplejson \
         libraspberrypi0 \
         ifupdown \
         sqlite3
+
+RUN python -m pip install --upgrade pip setuptools wheel
+
 
 # Install Python requirements
 ADD requirements/requirements.txt /tmp/requirements.txt
