@@ -6,10 +6,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         git-core \
         libffi-dev \
         libssl-dev \
+        libgirepository1.0-dev \
         net-tools \
         omxplayer \
         psmisc \
         python-dev \
+        python-gi \
         python-pip-whl \
         python-pip \
         python-pil \
@@ -20,7 +22,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         sqlite3
 
 RUN python -m pip install --upgrade pip setuptools wheel
-
 
 # Install Python requirements
 ADD requirements/requirements.txt /tmp/requirements.txt

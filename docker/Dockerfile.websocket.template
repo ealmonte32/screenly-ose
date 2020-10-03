@@ -4,6 +4,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
         ca-certificates \
         python-dev \
+        python-gi \
         python-pip-whl \
         python-pip \
         libffi-dev \
