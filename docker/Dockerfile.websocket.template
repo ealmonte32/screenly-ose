@@ -1,6 +1,6 @@
 FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:buster-run
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
-#RUN install_packages \
         build-essential \
         ca-certificates \
         python-dev \
@@ -17,7 +17,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install Python requirements
 RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
-#RUN pip install setuptools wheel
 RUN pip install \
     flask==1.0.2 \
     gevent-websocket==0.10.1 \

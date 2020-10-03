@@ -1,6 +1,6 @@
 FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:buster-run
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
-#RUN install_packages \
         build-essential \
         ca-certificates \
         git-core \
@@ -30,7 +30,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install Python requirements
 RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
-#RUN pip install setuptools wheel
 ADD requirements/requirements.txt /tmp/requirements.txt
 RUN pip install --upgrade --no-cache-dir -r /tmp/requirements.txt
 
