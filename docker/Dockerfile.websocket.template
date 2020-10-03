@@ -12,8 +12,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         whois
 
 # Install Python requirements
-RUN python -m pip install --upgrade pip setuptools wheel
-RUN python -m pip install \
+RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
+RUN pip install setuptools wheel
+RUN pip install \
     flask==1.0.2 \
     gevent-websocket==0.10.1 \
     gevent==1.2.2 \
