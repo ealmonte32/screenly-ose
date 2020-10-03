@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install Python requirements
 RUN python -m pip install --upgrade pip setuptools wheel
-RUN pip install \
+RUN python -m pip install \
     flask==1.0.2 \
     gevent-websocket==0.10.1 \
     gevent==1.2.2 \
