@@ -13,10 +13,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         omxplayer \
         psmisc \
         python-dev \
-    	python-gi \
+    	python-gobject \
+        python-gi \
+        python2.7 \
+        python2.7-dev \
         python-pip-whl \
         python-pip \
         python-pil \
+        python-wheel \
         python-netifaces \
         python-simplejson \
         libraspberrypi0 \
