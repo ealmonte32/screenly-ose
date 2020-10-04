@@ -77,6 +77,10 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.redis.template
+    environment:
+      - LISTEN=0.0.0.0
+    ports:
+      - 6379
     restart: always
 
 volumes:
