@@ -77,8 +77,11 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.redis.template
+    environment:
+      - HOME=/data
+      - LISTEN=screenly-celery
     ports:
-      - 6379
+      - 6379:6379
     restart: always
 
 volumes:
