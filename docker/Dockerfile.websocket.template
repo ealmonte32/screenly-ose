@@ -9,8 +9,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         python-wheel \
         python-pip \
         libffi-dev \
-        libssl-dev && \
-    apt-get clean
+        libssl-dev \
+    	&& apt-get clean && rm -rf /var/lib/apt/*
 
 # Install Python requirements
 RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
@@ -20,8 +20,11 @@ RUN pip install \
     gevent==1.2.2 \
     pyzmq==16.0.2 --no-cache-dir
     
-#initramfs compress as xz and modules as dep
-COPY tests/config/initramfs.conf /etc/initramfs-tools/initramfs.conf 
+# initramfs compress as xz and modules as dep
+COPY tests/config/initramfs.conf /etc/initramfs-tools/initramfs.conf
+
+# clean up unnecessary disk space
+COPY ansible/roles/system/files/01_nodoc /etc/dpkg/dpkg.cfg.d/
 
 COPY . /tmp/screenly
 
