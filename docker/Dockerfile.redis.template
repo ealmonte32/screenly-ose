@@ -9,4 +9,7 @@ COPY tests/config/initramfs.conf /etc/initramfs-tools/initramfs.conf
 # clean up unnecessary disk space
 COPY ansible/roles/system/files/01_nodoc /etc/dpkg/dpkg.cfg.d/
 
-CMD ["redis-server"]
+# copy redis.conf with listen on all interfaces and protected mode off
+COPY tests/config/redis.conf /etc/redis/redis.conf
+
+CMD ["redis-server", "/etc/redis/redis.conf"]
