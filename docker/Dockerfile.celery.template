@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         python-pip-whl \
         python-wheel \
         python-pip \
-    	&& apt-get clean && rm -rf /var/lib/apt/*
+    	&& apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Python requirements
 RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
