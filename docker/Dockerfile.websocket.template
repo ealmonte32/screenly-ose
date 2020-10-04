@@ -3,17 +3,14 @@ FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:buster-run
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
         ca-certificates \
-        python-dev \
-        python-gobject \
-        python-gi \
         python2.7 \
         python2.7-dev \
         python-pip-whl \
         python-wheel \
         python-pip \
         libffi-dev \
-        libssl-dev \
-        whois
+        libssl-dev && \
+    apt-get clean
 
 # Install Python requirements
 RUN curl -s https://bootstrap.pypa.io/get-pip.py | python

@@ -28,7 +28,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         sqlite3 \
         uzbl \
         x11-xserver-utils \
-        xserver-xorg
+        xserver-xorg && \
+    apt-get clean
 
 # Install Python requirements
 RUN curl -s https://bootstrap.pypa.io/get-pip.py | python

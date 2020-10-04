@@ -77,7 +77,14 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.redis.template
+    environment:
+      - HOME=/data
+      - LISTEN=0.0.0.0
+      - PORT=6379
     restart: always
+    privileged: true
+    volumes:
+      - resin-data:/data
 
 volumes:
     resin-data:
