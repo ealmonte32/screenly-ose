@@ -9,5 +9,4 @@ COPY tests/config/initramfs.conf /etc/initramfs-tools/initramfs.conf
 # clean up unnecessary disk space
 COPY ansible/roles/system/files/01_nodoc /etc/dpkg/dpkg.cfg.d/
 
-#CMD ["redis-server"]
-CMD ["redis-server --protected-mode no"]
+CMD ["redis-server"]
