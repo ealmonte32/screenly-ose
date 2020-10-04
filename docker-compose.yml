@@ -77,8 +77,6 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.redis.template
-    environment:
-      - SCREENLYSERVICE=redis
     restart: always
 
 volumes:
