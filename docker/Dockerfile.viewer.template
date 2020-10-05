@@ -12,15 +12,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         net-tools \
         omxplayer \
         psmisc \
-        python-dev \
+        #python-dev \
     	python-gobject \
         python-gi \
         python2.7 \
         python2.7-dev \
-        python-pip-whl \
+        #python-pip-whl \
         python-pip \
         python-pil \
-        python-wheel \
+        #python-wheel \
         python-netifaces \
         python-simplejson \
         libraspberrypi0 \

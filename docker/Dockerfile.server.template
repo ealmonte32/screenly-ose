@@ -13,13 +13,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         nginx-light \
         omxplayer \
         psmisc \
-        python-dev \
+        #python-dev \
         python-gobject \
         python-gi \
         python2.7 \
         python2.7-dev \
-        python-pip-whl \
-        python-wheel \
+        #python-pip-whl \
+        #python-wheel \
         python-pip \
         python-pil \
         python-netifaces \
