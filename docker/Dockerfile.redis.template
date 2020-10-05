@@ -1,4 +1,4 @@
-FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:buster-run AS builder
+FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:buster-run
 
 RUN apt-get update && apt-get install -y redis-server \
 	&& apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -11,9 +11,6 @@ COPY ansible/roles/system/files/01_nodoc /etc/dpkg/dpkg.cfg.d/
 
 # copy redis.conf with listen on all interfaces and protected mode off
 COPY tests/config/redis.conf /etc/redis/redis.conf
-
-FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:buster-run
-COPY --from=builder .
 
 CMD ["bash","swapoff","-a"]
 CMD ["redis-server", "/etc/redis/redis.conf"]
