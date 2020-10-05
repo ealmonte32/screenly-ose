@@ -1,7 +1,5 @@
 FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:buster-run
 
-ADD requirements/requirements.txt /tmp/requirements.txt
-
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
         ca-certificates \
@@ -15,12 +13,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         python-dev \
         python2.7 \
         python2.7-dev \
-        python-pip-whl \
-        python-wheel \
-        python-pip \
-    	&& apt-get clean && rm -rf /var/lib/apt/lists/* \
-    	&& curl -s https://bootstrap.pypa.io/get-pip.py | python \
-		&& pip install --upgrade --no-cache-dir -r /tmp/requirements.txt
+        #python-pip-whl \
+        #python-wheel \
+        #python-pip \
+    	&& apt-get clean && rm -rf /var/lib/apt/lists/*
+    	
+# Install Python requirements
+RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
+#ADD requirements/requirements.txt /tmp/requirements.txt
+#RUN pip install --upgrade --no-cache-dir -r /tmp/requirements.txt
+RUN pip install --upgrade celery==4.3.0
 
 # initramfs compress as xz and modules as dep
 COPY tests/config/initramfs.conf /etc/initramfs-tools/initramfs.conf
