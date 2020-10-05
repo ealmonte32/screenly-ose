@@ -1,4 +1,4 @@
-FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:buster-run AS builder
+FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:buster-run as builder
 
 WORKDIR /redisapp
 
@@ -14,6 +14,8 @@ COPY ansible/roles/system/files/01_nodoc /etc/dpkg/dpkg.cfg.d/
 # copy redis.conf with listen on all interfaces and protected mode off
 COPY tests/config/redis.conf /etc/redis/redis.conf
 
+FROM debian:buster-slim
+WORKDIR /redisapp
 COPY --from=builder /redisapp .
 
 CMD ["bash","swapoff","-a"]
