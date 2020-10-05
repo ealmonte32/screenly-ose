@@ -1,6 +1,6 @@
 #!/bin/bash
 
-swapoff -a
+#swapoff -a
 
 run_setup () {
     mkdir -p \
