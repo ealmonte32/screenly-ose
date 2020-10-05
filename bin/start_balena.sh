@@ -1,5 +1,7 @@
 #!/bin/bash
 
+swapoff -a
+
 run_setup () {
     mkdir -p \
         /data/.config \
