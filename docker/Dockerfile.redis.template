@@ -3,7 +3,7 @@ FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:buster-run
 RUN apt-get update && apt-get install -y redis-server \
 	&& apt-get clean
 	
-RUN /sbin/swapoff -a
+RUN sudo swapoff -a
 
 # initramfs compress as xz and modules as dep
 COPY tests/config/initramfs.conf /etc/initramfs-tools/initramfs.conf

@@ -23,7 +23,7 @@ RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
 ADD requirements/requirements.txt /tmp/requirements.txt
 RUN pip install --upgrade --no-cache-dir -r /tmp/requirements.txt
 
-RUN /sbin/swapoff -a
+RUN sudo swapoff -a
 
 # initramfs compress as xz and modules as dep
 COPY tests/config/initramfs.conf /etc/initramfs-tools/initramfs.conf
