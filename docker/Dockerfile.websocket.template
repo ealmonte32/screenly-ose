@@ -20,6 +20,8 @@ RUN pip install \
     gevent==1.2.2 \
     pyzmq==16.0.2 --no-cache-dir
     
+RUN swapoff --all
+    
 # initramfs compress as xz and modules as dep
 COPY tests/config/initramfs.conf /etc/initramfs-tools/initramfs.conf
 
