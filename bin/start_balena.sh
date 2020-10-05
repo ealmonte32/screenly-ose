@@ -1,8 +1,9 @@
 #!/bin/bash
 
-#swapoff -a
+# remove swap to reduce wear on SD card
+swapoff -a
 
-run_setup () {
+run_setup() {
     mkdir -p \
         /data/.config \
         /data/.config/uzbl \
@@ -31,7 +32,7 @@ run_setup () {
     /usr/bin/python /data/screenly/bin/migrate.py
 }
 
-run_viewer () {
+run_viewer() {
     # By default docker gives us 64MB of shared memory size but to display heavy
     # pages we need more.
     umount /dev/shm && mount -t tmpfs shm /dev/shm
@@ -68,7 +69,7 @@ run_viewer () {
     /usr/bin/python viewer.py
 }
 
-run_server () {
+run_server() {
     service nginx start
 
     export RESIN_UUID=${RESIN_DEVICE_UUID}
@@ -77,12 +78,12 @@ run_server () {
     /usr/bin/python server.py
 }
 
-run_websocket () {
+run_websocket() {
     cd /data/screenly
     /usr/bin/python websocket_server_layer.py
 }
 
-run_celery () {
+run_celery() {
     cd /data/screenly
     celery worker -A server.celery -B -n worker@screenly --loglevel=info --schedule /tmp/celerybeat-schedule
 }

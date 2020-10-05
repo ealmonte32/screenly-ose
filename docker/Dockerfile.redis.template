@@ -12,5 +12,4 @@ COPY ansible/roles/system/files/01_nodoc /etc/dpkg/dpkg.cfg.d/
 # copy redis.conf with listen on all interfaces and protected mode off
 COPY tests/config/redis.conf /etc/redis/redis.conf
 
-CMD ["bash","swapoff","-a"]
 CMD ["redis-server", "/etc/redis/redis.conf"]

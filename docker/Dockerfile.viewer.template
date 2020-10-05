@@ -45,7 +45,6 @@ COPY ansible/roles/system/files/01_nodoc /etc/dpkg/dpkg.cfg.d/
 COPY ansible/roles/screenly/files/gtkrc-2.0 /data/.gtkrc-2.0
 
 COPY . /tmp/screenly
-CMD ["bash","swapoff","-a"]
 
 CMD ["bash", "chmod 777 /dev/vchiq"]
 CMD ["bash", "/tmp/screenly/bin/start_balena.sh"]

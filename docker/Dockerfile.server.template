@@ -46,5 +46,4 @@ COPY ansible/roles/ssl/files/nginx_resin.conf /etc/nginx/sites-enabled/screenly.
 
 COPY . /tmp/screenly
 
-CMD ["bash","swapoff","-a"]
 CMD ["bash", "/tmp/screenly/bin/start_balena.sh"]
