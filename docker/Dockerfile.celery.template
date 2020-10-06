@@ -20,9 +20,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     	
 # Install Python requirements
 RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
-#ADD requirements/requirements.txt /tmp/requirements.txt
-#RUN pip install --upgrade --no-cache-dir -r /tmp/requirements.txt
-RUN pip install --upgrade celery==4.3.0
+ADD requirements/requirements.txt /tmp/requirements.txt
+RUN pip install --upgrade --no-cache-dir -r /tmp/requirements.txt
 
 # initramfs compress as xz and modules as dep
 COPY tests/config/initramfs.conf /etc/initramfs-tools/initramfs.conf
