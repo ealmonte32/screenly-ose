@@ -3,7 +3,7 @@
 # testing redis-server from alpine image
 FROM balenalib/%%BALENA_MACHINE_NAME%%-alpine:latest-run
 
-RUN apk -U upgrade
+RUN apk -U upgrade \
 	&& apk add redis-server
 
 #RUN apt-get update && apt-get install -y redis-server \
