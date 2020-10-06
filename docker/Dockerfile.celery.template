@@ -1,4 +1,4 @@
-FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:buster-build AS build
+FROM balenalib/%%BALENA_MACHINE_NAME%%-debian-python:2.7.18-buster-build AS build
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
@@ -10,17 +10,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libcairo2-dev \
         python-gobject \
         python-gi \
-        python2.7 \
-        python2.7-dev \
-        python-pip \
+        #python2.7 \
+        #python2.7-dev \
+        #python-pip \
     	&& apt-get clean && rm -rf /var/lib/apt/lists/*
     	
 # Install Python requirements
 ADD requirements/requirements.txt /tmp/requirements.txt
 RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
-RUN python -m pip install --upgrade --no-use-pep517 --no-cache-dir -r /tmp/requirements.txt
+RUN python -m pip install --upgrade --no-cache-dir -r /tmp/requirements.txt
 
-FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:buster-run
+FROM balenalib/%%BALENA_MACHINE_NAME%%-debian-python:2.7.18-buster-slim
 COPY --from=build /usr/local/lib/python2.7/dist-packages/ /usr/local/lib/python2.7/dist-packages/
 
 # initramfs compress as xz and modules as dep
