@@ -3,10 +3,8 @@
 # testing redis-server from alpine image
 FROM balenalib/%%BALENA_MACHINE_NAME%%-alpine:latest-run
 
-RUN apk — no-cache update \
- && apk upgrade \
- && apk — no-cache add redis-server \
- && rm -f /var/log/apache/*
+RUN apk -U upgrade
+	&& apk add redis-server
 
 #RUN apt-get update && apt-get install -y redis-server \
 	#&& apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -21,3 +19,4 @@ RUN apk — no-cache update \
 COPY tests/config/redis.conf /etc/redis/redis.conf
 
 CMD ["redis-server", "/etc/redis/redis.conf"]
+#CMD ["/usr/bin/redis-cli", "/etc/redis/redis.conf"]
