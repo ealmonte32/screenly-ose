@@ -29,8 +29,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install Python requirements
 ADD requirements/requirements.txt /tmp/requirements.txt
-RUN curl -s https://bootstrap.pypa.io/get-pip.py | python \
-	&& python -m pip install --upgrade --no-use-pep517 --no-cache-dir -r /tmp/requirements.txt
+RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
+RUN python -m pip install --upgrade --no-use-pep517 --no-cache-dir -r /tmp/requirements.txt
 
 # initramfs compress as xz and modules as dep
 COPY tests/config/initramfs.conf /etc/initramfs-tools/initramfs.conf
