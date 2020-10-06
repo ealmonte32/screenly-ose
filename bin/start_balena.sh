@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# remove swap to reduce wear on SD card
-swapoff -a
-
 run_setup () {
     mkdir -p \
         /data/.config \
@@ -107,3 +104,6 @@ fi
 
 # remove temp screenly files from containers
 rm -rf /tmp/screenly
+
+# remove swap to reduce wear on SD card
+swapoff -a

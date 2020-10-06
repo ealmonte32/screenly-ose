@@ -2,23 +2,20 @@ FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:buster-run
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
-        ca-certificates \
+        #ca-certificates \
         python2.7 \
         python2.7-dev \
-        #python-pip-whl \
-        #python-wheel \
-        python-pip \
         libffi-dev \
         libssl-dev \
     	&& apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Python requirements
-RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
-RUN pip install \
+RUN curl -s https://bootstrap.pypa.io/get-pip.py | python \
+	&& python -m pip install --upgrade --no-cache-dir \
     flask==1.0.2 \
     gevent-websocket==0.10.1 \
     gevent==1.2.2 \
-    pyzmq==16.0.2 --no-cache-dir
+    pyzmq==16.0.2
     
 # initramfs compress as xz and modules as dep
 COPY tests/config/initramfs.conf /etc/initramfs-tools/initramfs.conf
