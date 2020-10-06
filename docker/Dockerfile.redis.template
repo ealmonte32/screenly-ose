@@ -4,7 +4,7 @@
 FROM balenalib/%%BALENA_MACHINE_NAME%%-alpine:latest-run
 
 RUN apk -U upgrade \
-	&& apk add redis-server
+	&& apk add redis
 
 #RUN apt-get update && apt-get install -y redis-server \
 	#&& apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -18,5 +18,5 @@ RUN apk -U upgrade \
 # copy redis.conf with listen on all interfaces and protected mode off
 COPY tests/config/redis.conf /etc/redis/redis.conf
 
-CMD ["redis-server", "/etc/redis/redis.conf"]
+CMD ["/usr/bin/redis-server", "/etc/redis/redis.conf"]
 #CMD ["/usr/bin/redis-cli", "/etc/redis/redis.conf"]
