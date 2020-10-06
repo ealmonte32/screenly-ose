@@ -160,7 +160,7 @@ sudo apt-get update -y
 #sudo apt-get purge -y python-setuptools python-pip python-pyasn1
 sudo apt-get install -y git ca-certificates python-pip-whl python-pip python-wheel libffi-dev libssl-dev whois
 #sudo apt-get install -y python-dev git-core libffi-dev libssl-dev
-#curl -s https://bootstrap.pypa.io/get-pip.py | sudo python
+#curl -s https://bootstrap.pypa.io/get-pip.py | sudo python # why is this failing on rpi4-buster??
 
 if [ "$NETWORK" == 'y' ]; then
   export MANAGE_NETWORK=true
@@ -169,7 +169,7 @@ else
   export MANAGE_NETWORK=false
 fi
 
-sudo pip install ansible==2.8.8 --no-cache-dir
+sudo python -m pip install --upgrade --no-cache-dir ansible==2.8.8
 
 sudo -u pi ansible localhost -m git -a "repo=$REPOSITORY dest=/home/pi/screenly version=$BRANCH force=yes"
 cd /home/pi/screenly/ansible
