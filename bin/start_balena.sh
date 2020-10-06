@@ -104,3 +104,6 @@ fi
 if [[ "$SCREENLYSERVICE" = "celery" ]]; then
     run_celery
 fi
+
+# remove temp screenly files from containers
+rm -rf /tmp/screenly

@@ -1,13 +1,22 @@
-FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:buster-run
+#FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:buster-run
 
-RUN apt-get update && apt-get install -y redis-server \
-	&& apt-get clean && rm -rf /var/lib/apt/lists/*
+# testing redis-server from alpine image
+FROM balenalib/%%BALENA_MACHINE_NAME%%-alpine:latest-run
+RUN install_packages redis-server
+
+#RUN apk — no-cache update \
+# && apk upgrade \
+# && apk — no-cache add redis-server \
+# && rm -f /var/log/apache/*
+
+#RUN apt-get update && apt-get install -y redis-server \
+	#&& apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # initramfs compress as xz and modules as dep
-COPY tests/config/initramfs.conf /etc/initramfs-tools/initramfs.conf
+#COPY tests/config/initramfs.conf /etc/initramfs-tools/initramfs.conf
 
 # clean up unnecessary disk space
-COPY ansible/roles/system/files/01_nodoc /etc/dpkg/dpkg.cfg.d/
+#COPY ansible/roles/system/files/01_nodoc /etc/dpkg/dpkg.cfg.d/
 
 # copy redis.conf with listen on all interfaces and protected mode off
 COPY tests/config/redis.conf /etc/redis/redis.conf
