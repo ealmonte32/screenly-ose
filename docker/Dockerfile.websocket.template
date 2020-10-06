@@ -1,4 +1,4 @@
-FROM balenalib/%%BALENA_MACHINE_NAME%%-debian-python:2.7.18-buster AS build
+FROM balenalib/%%BALENA_MACHINE_NAME%%-debian-python:2.7.18-buster-run AS build
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
