@@ -62,6 +62,7 @@ services:
     depends_on:
       - screenly-server
       - redis
+    command: [celery, worker, -A, server.celery, -B, -n, worker@screenly, --loglevel=info, --schedule, /tmp/celerybeat-schedule]
     environment:
       - HOME=/data
       - PYTHONPATH=/data/screenly

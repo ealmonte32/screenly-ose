@@ -27,8 +27,6 @@ run_setup () {
     fi
 
     /usr/bin/python /data/screenly/bin/migrate.py
-    
-    rm -rf /tmp/screenly
 }
 
 run_viewer () {
@@ -66,8 +64,6 @@ run_viewer () {
 
     cd /data/screenly
     /usr/bin/python viewer.py
-    
-    rm -rf /tmp/screenly
 }
 
 run_server () {
@@ -77,22 +73,16 @@ run_server () {
 
     cd /data/screenly
     /usr/bin/python server.py
-    
-    rm -rf /tmp/screenly
 }
 
 run_websocket () {
     cd /data/screenly
     /usr/bin/python websocket_server_layer.py
-    
-    rm -rf /tmp/screenly
 }
 
 run_celery () {
     cd /data/screenly
     celery worker -A server.celery -B -n worker@screenly --loglevel=info --schedule /tmp/celerybeat-schedule
-    
-    rm -rf /tmp/screenly
 }
 
 if [[ "$SCREENLYSERVICE" = "server" ]]; then

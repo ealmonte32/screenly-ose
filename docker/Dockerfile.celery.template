@@ -1,4 +1,4 @@
-FROM python:2.7.18-slim-buster
+FROM python:2.7.18-slim-stretch
 
 RUN pip install -U --no-cache-dir \
 		celery==4.3.0 \
@@ -9,6 +9,7 @@ RUN pip install -U --no-cache-dir \
 		billiard==3.6.3.0 \
 		pytz==2012d
 
-COPY . /tmp/screenly
+#COPY . /tmp/screenly
 
-CMD ["bash", "/tmp/screenly/bin/start_balena.sh"]
+#celery worker -A server.celery -B -n worker@screenly --loglevel=info --schedule /tmp/celerybeat-schedule
+#CMD ["bash", "/tmp/screenly/bin/start_balena.sh"]
