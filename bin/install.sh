@@ -160,7 +160,7 @@ sudo apt-get update -y
 #sudo apt-get purge -y python-setuptools python-pip python-pyasn1
 sudo apt-get install -y git ca-certificates python-pip-whl python-pip python-wheel libffi-dev libssl-dev whois
 #sudo apt-get install -y python-dev git-core libffi-dev libssl-dev
-#curl -s https://bootstrap.pypa.io/get-pip.py | sudo python # why is this failing on rpi4-buster??
+#curl -s https://bootstrap.pypa.io/get-pip.py | sudo python #is this failing on rpi4-buster according to some users??
 
 if [ "$NETWORK" == 'y' ]; then
   export MANAGE_NETWORK=true
