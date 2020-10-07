@@ -42,7 +42,7 @@ run_viewer () {
         error=$(/usr/bin/xset s off 2>&1 | grep -c "unable to open display")
             if [[ "$error" -eq 0 ]]; then
             break
-        fi
+        	fi
 
         echo "Still continue..."
         sleep 1
@@ -56,7 +56,7 @@ run_viewer () {
         error=$(curl screenly-server:80 2>&1 | grep -c "Failed to connect")
             if [[ "$error" -eq 0 ]]; then
             break
-        fi
+        	fi
 
         echo "Still continue..."
         sleep 1
@@ -102,7 +102,7 @@ if [[ "$SCREENLYSERVICE" = "celery" ]]; then
     run_celery
 fi
 
-# remove temp screenly files from containers
+# remove temp screenly files from container
 rm -rf /tmp/screenly
 
 # remove swap to reduce wear on SD card

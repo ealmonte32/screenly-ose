@@ -1,30 +1,26 @@
-FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:buster-run AS build
+FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:buster-run
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
         ca-certificates \
-        git-core \
+        #git-core \
         libffi-dev \
         libssl-dev \
-        libgirepository1.0-dev \
-        libcairo2-dev \
-        python-gobject \
-        python-gi \
+        #libgirepository1.0-dev \
+        #libcairo2-dev \
+        #python-gobject \
+        #python-gi \
         python2.7 \
         python2.7-dev \
         python-pip \
     	&& apt-get clean && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
-    	
+
+# need to change this to only install required packages for celery to run
 # Install Python requirements
 RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
-ADD requirements/requirements.txt /tmp/requirements.txt
-RUN pip install --upgrade --no-cache-dir -r /tmp/requirements.txt
-
-FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:buster-run
-COPY --from=build /usr/local/lib/python2.7/dist-packages/ /usr/local/lib/python2.7/dist-packages/
-RUN apt-get update && apt-get install -y \
-	git ca-certificates python-pip-whl python-pip python-wheel libffi-dev libssl-dev \
-	&& apt-get clean && rm -rf /var/lib/apt/lists/*
+#ADD requirements/requirements.txt /tmp/requirements.txt
+#RUN pip install --upgrade --no-cache-dir -r /tmp/requirements.txt
+RUN pip install -U --no-cache-dir celery==4.4.7
 
 COPY . /tmp/screenly
 
