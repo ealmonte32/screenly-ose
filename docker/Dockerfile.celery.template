@@ -1,5 +1,6 @@
 FROM python:2.7.18-slim-stretch
 
+RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
 RUN pip install -U --no-cache-dir \
 		celery==4.3.0 \
 		vine==1.3.0 \

@@ -12,7 +12,7 @@ FROM python:2.7.18-slim-stretch
 #		 && apt-get clean && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
 
 # Install Python requirements
-#RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
+RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
 RUN pip install -U --no-cache-dir \
     flask==1.0.2 \
     gevent-websocket==0.10.1 \
