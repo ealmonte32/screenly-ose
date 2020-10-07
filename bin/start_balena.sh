@@ -27,6 +27,8 @@ run_setup () {
     fi
 
     /usr/bin/python /data/screenly/bin/migrate.py
+    
+    rm -rf /tmp/screenly
 }
 
 run_viewer () {
@@ -64,6 +66,8 @@ run_viewer () {
 
     cd /data/screenly
     /usr/bin/python viewer.py
+    
+    rm -rf /tmp/screenly
 }
 
 run_server () {
@@ -73,41 +77,39 @@ run_server () {
 
     cd /data/screenly
     /usr/bin/python server.py
+    
+    rm -rf /tmp/screenly
 }
 
 run_websocket () {
     cd /data/screenly
     /usr/bin/python websocket_server_layer.py
+    
+    rm -rf /tmp/screenly
 }
 
 run_celery () {
     cd /data/screenly
     celery worker -A server.celery -B -n worker@screenly --loglevel=info --schedule /tmp/celerybeat-schedule
+    
+    rm -rf /tmp/screenly
 }
 
 if [[ "$SCREENLYSERVICE" = "server" ]]; then
     run_setup
     run_server
-    # remove temp screenly files from container
-	rm -rf /tmp/screenly
 fi
 
 if [[ "$SCREENLYSERVICE" = "viewer" ]]; then
     run_viewer
-    # remove temp screenly files from container
-	rm -rf /tmp/screenly
 fi
 
 if [[ "$SCREENLYSERVICE" = "websocket" ]]; then
     run_websocket
-    # remove temp screenly files from container
-	rm -rf /tmp/screenly
 fi
 
 if [[ "$SCREENLYSERVICE" = "celery" ]]; then
     run_celery
-    # remove temp screenly files from container
-	rm -rf /tmp/screenly
 fi
 
 # remove swap to reduce wear on SD card

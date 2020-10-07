@@ -5,9 +5,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         ca-certificates \
         libffi-dev \
         libssl-dev \
-        #libgirepository1.0-dev \
+        libgirepository1.0-dev \
         #libcairo2-dev \
-        #python-gi \
+        python-gi \
         python2.7 \
         python2.7-dev \
         python-pip \
