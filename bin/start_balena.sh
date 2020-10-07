@@ -88,10 +88,12 @@ run_celery () {
 if [[ "$SCREENLYSERVICE" = "server" ]]; then
     run_setup
     run_server
+    rm -rf /tmp/screenly
 fi
 
 if [[ "$SCREENLYSERVICE" = "viewer" ]]; then
     run_viewer
+    rm -rf /tmp/screenly
 fi
 
 if [[ "$SCREENLYSERVICE" = "websocket" ]]; then

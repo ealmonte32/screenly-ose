@@ -1,4 +1,15 @@
-FROM python:2.7.18-slim-stretch
+FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:stretch-run
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        #build-essential \
+        curl \
+		ca-certificates \
+        python2.7 \
+        python2.7-dev \
+        #python-pip \
+        #libffi-dev \
+        libssl-dev \
+		&& apt-get clean && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
 
 RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
 RUN pip install -U --no-cache-dir \
