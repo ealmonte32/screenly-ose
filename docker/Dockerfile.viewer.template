@@ -38,4 +38,3 @@ COPY . /tmp/screenly
 
 CMD ["bash", "chmod 777 /dev/vchiq"]
 CMD ["bash", "/tmp/screenly/bin/start_balena.sh"]
-RUN rm -rf /tmp/screenly

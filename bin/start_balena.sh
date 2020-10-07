@@ -88,22 +88,27 @@ run_celery () {
 if [[ "$SCREENLYSERVICE" = "server" ]]; then
     run_setup
     run_server
+    # remove temp screenly files from container
+	rm -rf /tmp/screenly
 fi
 
 if [[ "$SCREENLYSERVICE" = "viewer" ]]; then
     run_viewer
+    # remove temp screenly files from container
+	rm -rf /tmp/screenly
 fi
 
 if [[ "$SCREENLYSERVICE" = "websocket" ]]; then
     run_websocket
+    # remove temp screenly files from container
+	rm -rf /tmp/screenly
 fi
 
 if [[ "$SCREENLYSERVICE" = "celery" ]]; then
     run_celery
+    # remove temp screenly files from container
+	rm -rf /tmp/screenly
 fi
-
-# remove temp screenly files from container
-rm -rf /tmp/screenly
 
 # remove swap to reduce wear on SD card
 swapoff -a

@@ -21,4 +21,3 @@ RUN pip install -U --no-cache-dir \
 COPY . /tmp/screenly
 
 CMD ["bash", "/tmp/screenly/bin/start_balena.sh"]
-RUN rm -rf /tmp/screenly
