@@ -3,24 +3,26 @@ FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:buster-run
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
         ca-certificates \
-        #git-core \
         libffi-dev \
         libssl-dev \
         #libgirepository1.0-dev \
         #libcairo2-dev \
-        #python-gobject \
         #python-gi \
         python2.7 \
         python2.7-dev \
         python-pip \
     	&& apt-get clean && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
 
-# need to change this to only install required packages for celery to run
 # Install Python requirements
 RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
-#ADD requirements/requirements.txt /tmp/requirements.txt
-#RUN pip install --upgrade --no-cache-dir -r /tmp/requirements.txt
-RUN pip install -U --no-cache-dir celery==4.4.7
+RUN pip install -U --no-cache-dir \
+		celery==4.4.7 \
+		vine==1.3.0 \
+		amqp==2.6.1 \
+		kombu==4.6.3 \
+		pydbus==0.6.0 \
+		billiard==3.6.3.0 \
+		pytz==2012d
 
 COPY . /tmp/screenly
 

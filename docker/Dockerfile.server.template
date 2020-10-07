@@ -17,10 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         python-gi \
         python2.7 \
         python2.7-dev \
-        #python-pip-whl \
-        #python-wheel \
-        #python-pip \
-        #python-pil \
+        python-pip \
         python-netifaces \
         python-simplejson \
         libraspberrypi0 \
@@ -31,10 +28,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install Python requirements
 ADD requirements/requirements.txt /tmp/requirements.txt
 RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
-RUN pip install --upgrade --no-cache-dir -r /tmp/requirements.txt
-
-# clean up unnecessary disk space
-COPY ansible/roles/system/files/01_nodoc /etc/dpkg/dpkg.cfg.d/
+RUN pip install -U --no-cache-dir -r /tmp/requirements.txt
 
 # Setup nginx
 RUN rm /etc/nginx/sites-enabled/default
@@ -43,3 +37,4 @@ COPY ansible/roles/ssl/files/nginx_resin.conf /etc/nginx/sites-enabled/screenly.
 COPY . /tmp/screenly
 
 CMD ["bash", "/tmp/screenly/bin/start_balena.sh"]
+RUN rm -rf /tmp/screenly

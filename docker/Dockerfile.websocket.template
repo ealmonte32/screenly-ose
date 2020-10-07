@@ -12,14 +12,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install Python requirements
 RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
-RUN pip install --upgrade --no-cache-dir \
+RUN pip install -U --no-cache-dir \
     flask==1.0.2 \
     gevent-websocket==0.10.1 \
     gevent==1.2.2 \
     pyzmq==16.0.2
 
-COPY ansible/roles/system/files/01_nodoc /etc/dpkg/dpkg.cfg.d/
-
 COPY . /tmp/screenly
 
 CMD ["bash", "/tmp/screenly/bin/start_balena.sh"]
+RUN rm -rf /tmp/screenly
