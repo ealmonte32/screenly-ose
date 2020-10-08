@@ -1,5 +1,8 @@
 FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:stretch-run
 
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 PYTHONUNBUFFERED=1
+WORKDIR /
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
         curl \
@@ -7,24 +10,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         python \
         python-dev \
         python-minimal \
-        python-celery \
         #python-pip \
         libffi-dev \
         libssl-dev \
 		&& apt-get clean && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
-#testing installing via python-celery
-#RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
-#RUN pip install -U --no-cache-dir \
-		#celery==4.3.0 \
-		#vine==1.3.0 \
-		#amqp==2.6.1 \
-		#kombu==4.6.3 \
-		#pydbus==0.6.0 \
-		#billiard==3.6.3.0 \
-		#pytz==2012d
+
+RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
+RUN pip install --no-cache-dir \
+		celery==4.3.0 \
+		vine==1.3.0 \
+		amqp==2.6.1 \
+		kombu==4.6.3 \
+		pydbus==0.6.0 \
+		billiard==3.6.3.0 \
+		pytz==2012d
 
 #COPY . /tmp/screenly
+COPY . /
 
 CMD ["/usr/local/bin/celery", "worker -A server.celery -B -n worker@screenly --loglevel=info --schedule /tmp/celerybeat-schedule"]
 #CMD ["bash", "/tmp/screenly/bin/start_balena.sh"]
-#command: [celery, worker, -A, server.celery, -B, -n, worker@screenly, --loglevel=info, --schedule, /tmp/celerybeat-schedule]
