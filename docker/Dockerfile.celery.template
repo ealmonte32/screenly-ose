@@ -1,7 +1,6 @@
 FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:stretch-run
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 PYTHONUNBUFFERED=1
-WORKDIR /
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
@@ -23,10 +22,8 @@ RUN pip install --no-cache-dir \
 		kombu==4.6.3 \
 		pydbus==0.6.0 \
 		billiard==3.6.3.0 \
+		redis==3.5.3 \
 		pytz==2012d
-
-#COPY . /tmp/screenly
-COPY . /
 
 CMD ["/usr/local/bin/celery", "worker -A server.celery -B -n worker@screenly --loglevel=info --schedule /tmp/celerybeat-schedule"]
 #CMD ["bash", "/tmp/screenly/bin/start_balena.sh"]

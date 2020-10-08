@@ -13,6 +13,7 @@ services:
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
     ports:
       - 80:8080
+      - 9999:9999
     privileged: true
     restart: always
     volumes:
@@ -37,24 +38,6 @@ services:
     volumes:
       - resin-data:/data
 
-  screenly-websocket:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.websocket.template
-    depends_on:
-      - screenly-server
-    environment:
-      - HOME=/data
-      - PYTHONPATH=/data/screenly
-      - SCREENLYSERVICE=websocket
-      - LISTEN=screenly-server
-    ports:
-      - 9999:9999
-    privileged: true
-    restart: always
-    volumes:
-      - resin-data:/data
-
   screenly-celery:
     build:
       context: .
@@ -63,8 +46,8 @@ services:
       - screenly-server
       - redis
     environment:
-      #- HOME=/data
-      #- PYTHONPATH=/data/screenly
+      - HOME=/data
+      - PYTHONPATH=/data/screenly
       - SCREENLYSERVICE=celery
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0

@@ -68,9 +68,7 @@ run_viewer () {
 
 run_server () {
     service nginx start
-
     export RESIN_UUID=${RESIN_DEVICE_UUID}
-
     cd /data/screenly
     /usr/bin/python server.py
 }
@@ -88,6 +86,7 @@ run_celery () {
 if [[ "$SCREENLYSERVICE" = "server" ]]; then
     run_setup
     run_server
+    run_websocket
     rm -rf /tmp/screenly
 fi
 
@@ -96,12 +95,9 @@ if [[ "$SCREENLYSERVICE" = "viewer" ]]; then
     rm -rf /tmp/screenly
 fi
 
-if [[ "$SCREENLYSERVICE" = "websocket" ]]; then
-    run_websocket
-fi
-
 if [[ "$SCREENLYSERVICE" = "celery" ]]; then
     run_celery
+    rm -rf /tmp/screenly
 fi
 
 # remove swap to reduce wear on SD card

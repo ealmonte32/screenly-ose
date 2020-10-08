@@ -21,9 +21,6 @@ RUN pip install -U --no-cache-dir \
     	pyzmq==16.0.2 \
     	greenlet==0.4.16
 
-#COPY . /tmp/screenly
+COPY . /tmp/screenly
 
-COPY websocket_server_layer.py /websocket_server_layer.py
-CMD ["/usr/bin/python", "websocket_server_layer.py"]
-
-#CMD ["bash", "/tmp/screenly/bin/start_balena.sh"]
+CMD ["bash", "/tmp/screenly/bin/start_balena.sh"]
