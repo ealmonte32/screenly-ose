@@ -25,5 +25,4 @@ RUN pip install --no-cache-dir \
 		redis==3.5.3 \
 		pytz==2012d
 
-CMD ["/usr/local/bin/celery", "worker -A server.celery -B -n worker@screenly --loglevel=info --schedule /tmp/celerybeat-schedule"]
-#CMD ["bash", "/tmp/screenly/bin/start_balena.sh"]
+CMD ["bash", "/tmp/screenly/bin/start_balena.sh"]
