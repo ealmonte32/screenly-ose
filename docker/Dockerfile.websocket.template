@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		ca-certificates \
         python \
         python-dev \
-        python-minimal \
+        #python-minimal \
         #python-pip \
         libffi-dev \
         libssl-dev \
@@ -15,14 +15,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install Python requirements
 RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
 RUN pip install -U --no-cache-dir \
-    flask==1.0.2 \
-    gevent-websocket==0.10.1 \
-    gevent==1.2.2 \
-    pyzmq==16.0.2
+    	flask==1.0.2 \
+    	gevent-websocket==0.10.1 \
+    	gevent==1.2.2 \
+    	pyzmq==16.0.2 \
+    	greenlet==0.4.16
 
 #COPY . /tmp/screenly
 
-COPY websocket_server_layer.py ./websocket_server_layer.py
-CMD ["/usr/bin/python", "./websocket_server_layer.py"]
+COPY websocket_server_layer.py /websocket_server_layer.py
+CMD ["/usr/bin/python", "websocket_server_layer.py"]
 
 #CMD ["bash", "/tmp/screenly/bin/start_balena.sh"]
