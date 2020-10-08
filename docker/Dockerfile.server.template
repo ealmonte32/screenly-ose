@@ -13,11 +13,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         nginx-light \
         omxplayer \
         psmisc \
-        python-gobject \
+        #python-gobject \
         python-gi \
-        python2.7 \
-        python2.7-dev \
-        python-pip \
+        python \
+        python-dev \
+        #python-pip \
         python-netifaces \
         python-simplejson \
         libraspberrypi0 \
@@ -33,7 +33,6 @@ RUN pip install -U --no-cache-dir -r /tmp/requirements.txt
 # Setup nginx
 RUN rm /etc/nginx/sites-enabled/default
 COPY ansible/roles/ssl/files/nginx_resin.conf /etc/nginx/sites-enabled/screenly.conf
-
 COPY . /tmp/screenly
 
 CMD ["bash", "/tmp/screenly/bin/start_balena.sh"]

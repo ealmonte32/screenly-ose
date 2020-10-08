@@ -1,5 +1,9 @@
 *.py[co]
 *.git
+*.github
+docs/*
+tests/assets/*
+tests/*.py
 
 # Packages
 *.egg
@@ -36,5 +40,4 @@ pip-log.txt
 venv
 node_modules
 *.retry
-
 .env

@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libffi-dev \
         libssl-dev \
 		&& apt-get clean && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
-
+#testing installing via python-celery
 #RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
 #RUN pip install -U --no-cache-dir \
 		#celery==4.3.0 \
@@ -25,6 +25,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 #COPY . /tmp/screenly
 
-CMD ["celery", "worker -A server.celery -B -n worker@screenly --loglevel=info --schedule /tmp/celerybeat-schedule"]
+CMD ["/usr/local/bin/celery", "worker -A server.celery -B -n worker@screenly --loglevel=info --schedule /tmp/celerybeat-schedule"]
 #CMD ["bash", "/tmp/screenly/bin/start_balena.sh"]
 #command: [celery, worker, -A, server.celery, -B, -n, worker@screenly, --loglevel=info, --schedule, /tmp/celerybeat-schedule]

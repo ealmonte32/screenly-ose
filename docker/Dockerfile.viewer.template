@@ -28,12 +28,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     	&& apt-get clean && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
 
 # Install Python requirements
-RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
 ADD requirements/requirements.txt /tmp/requirements.txt
+RUN curl -s https://bootstrap.pypa.io/get-pip.py | python
 RUN pip install -U --no-cache-dir -r /tmp/requirements.txt
 
 COPY ansible/roles/screenly/files/gtkrc-2.0 /data/.gtkrc-2.0
-
 COPY . /tmp/screenly
 
 CMD ["bash", "chmod 777 /dev/vchiq"]
