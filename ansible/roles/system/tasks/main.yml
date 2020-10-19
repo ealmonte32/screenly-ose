@@ -129,11 +129,11 @@
 
 - set_fact: cc1plus_exist="{{cc1plus.stat.exists}}"
 
-#- name: Remove build-essential
-#  apt:
-#    name: build-essential
-#    state: absent
-#  when: not cc1plus_exist
+- name: Remove build-essential
+  apt:
+    name: build-essential
+    state: absent
+  when: not cc1plus_exist
 
 - name: Install build-essential
   apt:
@@ -178,6 +178,7 @@
       - lightdm-gtk-greeter
       - dphys-swapfile
       - rabbitmq-server
+      - pix-plym-splash
     state: absent
     
 - name: Remove cups/printing related packages
