@@ -2,8 +2,6 @@
 *.git
 *.github
 docs/*
-tests/assets/*
-tests/*.py
 
 # Packages
 *.egg
@@ -37,7 +35,5 @@ pip-log.txt
 .fseventsd/*
 .Spotlight-V100/*
 .sass-cache/*
-venv
 node_modules
-*.retry
-.env
+venv
