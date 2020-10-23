@@ -33,11 +33,11 @@ if [ "$WEB_UPGRADE" = false ]; then
     echo -e "Detected old installation command. Please use:\n$ bash <(curl -sL https://www.screenlyapp.com/install-ose.sh)"
     exit 1
   fi
-  
+
   # clear screen
   clear;
-
-  # Set color and make bold
+  
+  # Set color of logo
   tput setaf 6
   tput bold
 
@@ -60,22 +60,24 @@ EOF
     exit 1
   fi
 
-  if [ -z "${BRANCH}" ]; then
-    echo && read -p "Would you like to use the experimental branch? It contains the last major changes, such as the new browser and migrating to Docker (y/N)" -n 1 -r -s EXP && echo
-    if [ "$EXP" != 'y'  ]; then
-      echo && read -p "Would you like to use the development (master) branch? You will get the latest features, but things may break. (y/N)" -n 1 -r -s DEV && echo
-      if [ "$DEV" != 'y'  ]; then
-        export DOCKER_TAG="production"
-        BRANCH="production"
-      else
-        export DOCKER_TAG="latest"
-        BRANCH="master"
-      fi
-    else
-      export DOCKER_TAG="experimental"
-      BRANCH="experimental"
-    fi
-  fi
+echo -e "\n________________________________________\n"
+echo -e "Which version/branch of Screenly-OSE would you like to install:\n"
+echo " Press (1) for the Production branch, which is the latest stable."
+echo " Press (2) for the Development/Master branch, which has the latest features and fixes, but things may break."
+echo " Press (3) for the Experimental branch, which contains the last major changes, such as the new browser and migrating to Docker."
+echo ""
+
+read -n 1 -r -s BRANCHSELECTION
+case $BRANCHSELECTION in
+  1) echo "You selected: Production";export DOCKER_TAG="production";BRANCH="production"
+    ;;
+  2) echo "You selected: Development/Master";export DOCKER_TAG="latest";BRANCH="master"
+    ;;
+  3) echo "You selected: Experimental";export DOCKER_TAG="experimental";BRANCH="experimental"
+    ;;
+  *) echo "(Error) That was not an option, installer will now exit.";exit
+    ;;
+esac
 
   echo && read -p "Do you want Screenly to manage your network? This is recommended for most users because this adds features to manage your network. (Y/n)" -n 1 -r -s NETWORK && echo
 
@@ -134,10 +136,10 @@ fi
 if [ -z "${REPOSITORY}" ]; then
   if [ "$WEB_UPGRADE" = false ]; then
     set -x
-    REPOSITORY=${1:-https://github.com/ealmonte32/screenly-ose.git}
+    REPOSITORY=${1:-https://github.com/screenly/screenly-ose.git}
   else
     set -e
-    REPOSITORY=https://github.com/ealmonte32/screenly-ose.git
+    REPOSITORY=https://github.com/screenly/screenly-ose.git
   fi
 fi
 
@@ -150,10 +152,10 @@ if [ ! -f /etc/locale.gen ]; then
   sudo locale-gen
 fi
 
-sudo apt-get update -y
+sudo sed -i 's/apt.screenlyapp.com/archive.raspbian.org/g' /etc/apt/sources.list
+sudo apt update -y
 sudo apt-get purge -y python-setuptools python-pip python-pyasn1
-#sudo apt-get install -y git ca-certificates python-pip-whl python-pip python-wheel libffi-dev libssl-dev whois
-sudo apt-get install -y python-dev git-core libffi-dev libssl-dev whois ca-certificates
+sudo apt-get install -y python-dev git-core libffi-dev libssl-dev whois
 curl -s https://bootstrap.pypa.io/get-pip.py | sudo python
 
 # users who chose experimental and then reverted back to master or production need docker removed
@@ -168,7 +170,7 @@ else
   export MANAGE_NETWORK=false
 fi
 
-sudo python -m pip install --upgrade --no-cache-dir ansible==2.8.8
+sudo pip install ansible==2.8.8
 
 sudo -u pi ansible localhost -m git -a "repo=$REPOSITORY dest=/home/pi/screenly version=$BRANCH force=yes"
 cd /home/pi/screenly/ansible
@@ -194,6 +196,7 @@ else
   echo "pi ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/010_pi-nopasswd > /dev/null
   sudo chmod 0440 /etc/sudoers.d/010_pi-nopasswd
 fi
+
 #######################################################################
 # Setup a new pi password if default password "raspberry" detected
 
