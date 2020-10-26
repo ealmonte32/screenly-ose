@@ -416,9 +416,7 @@ def prepare_asset(request, unique_name=False):
     if not all([get('name'), get('uri'), get('mimetype')]):
         raise Exception("Not enough information provided. Please specify 'name', 'uri', and 'mimetype'.")
 
-    ampfix = "&amp;"
-    name = escape(get('name').replace(ampfix, '&'))
-    
+    name = escape(get('name'))
     if unique_name:
         with db.conn(settings['database']) as conn:
             names = assets_helper.get_names_of_assets(conn)
@@ -440,9 +438,8 @@ def prepare_asset(request, unique_name=False):
         'is_processing': get('is_processing'),
         'nocache': get('nocache'),
     }
-    
-    # without the encoding to ascii, we raise UnicodeEncodeError, but non-ascii characters still wont be parsed
-    uri = (get('uri').replace(ampfix, '&')).encode('ascii', 'backslashreplace')
+
+    uri = escape(get('uri').encode('utf-8'))
 
     if uri.startswith('/'):
         if not path.isfile(uri):
@@ -510,7 +507,6 @@ def prepare_asset_v1_2(request_environ, asset_id=None, unique_name=False):
 
     ampfix = "&amp;"
     name = escape(get('name').replace(ampfix, '&'))
-    
     if unique_name:
         with db.conn(settings['database']) as conn:
             names = assets_helper.get_names_of_assets(conn)
@@ -531,8 +527,7 @@ def prepare_asset_v1_2(request_environ, asset_id=None, unique_name=False):
         'nocache': get('nocache')
     }
 
-    # without the encoding to ascii, we raise UnicodeEncodeError, but non-ascii characters still wont be parsed
-    uri = (get('uri').replace(ampfix, '&')).encode('ascii', 'backslashreplace')
+    uri = (get('uri')).replace(ampfix, '&').replace('<', '&lt;').replace('>', '&gt;').replace('\'', '&apos;').replace('\"', '&quot;')
 
     if uri.startswith('/'):
         if not path.isfile(uri):
@@ -1622,7 +1617,7 @@ else:
     SWAGGER_URL = '/api/docs'
     swagger_address = getenv("SWAGGER_HOST", my_ip)
 
-    if settings['use_ssl']:
+    if settings['use_ssl'] or is_demo_node:
         API_URL = 'https://{}/api/swagger.json'.format(swagger_address)
     elif LISTEN == '127.0.0.1' or swagger_address != my_ip:
         API_URL = "http://{}/api/swagger.json".format(swagger_address)
@@ -1633,7 +1628,7 @@ else:
         SWAGGER_URL,
         API_URL,
         config={
-            'app_name': "Screenly API"
+            'app_name': "Screenly OSE API"
         }
     )
     app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
