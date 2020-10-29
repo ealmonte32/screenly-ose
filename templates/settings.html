@@ -134,6 +134,27 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label class="small text-secondary">US Time Zone</label>
+                            <select class="form-control" name="us_timezone">
+                                <option value="US/Eastern"
+                                        {% if context.us_timezone == 'US/Eastern' %} selected="selected" {% endif %}>
+                                    US/Eastern
+                                </option>
+                                <option value="US/Central"
+                                        {% if context.us_timezone == 'US/Central' %} selected="selected" {% endif %}>
+                                    US/Central
+                                </option>
+                                <option value="US/Mountain"
+                                        {% if context.us_timezone == 'US/Mountain' %} selected="selected" {% endif %}>
+                                    US/Mountain
+                                </option>
+                                <option value="US/Pacific"
+                                        {% if context.us_timezone == 'US/Pacific' %} selected="selected" {% endif %}>
+                                    US/Pacific
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label class="small text-secondary">Date format</label>
                             <select class="form-control" name="date_format">
                                 <option value="mm/dd/yyyy"
