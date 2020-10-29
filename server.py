@@ -243,6 +243,7 @@ def template(template_name, **context):
 
     # Add global contexts
     context['date_format'] = settings['date_format']
+    #context['us_timezone'] = settings['us_timezone']
     context['default_duration'] = settings['default_duration']
     context['default_streaming_duration'] = settings['default_streaming_duration']
     context['template_settings'] = {
