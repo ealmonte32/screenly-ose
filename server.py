@@ -105,7 +105,16 @@ def upgrade_screenly(self, branch, manage_network, upgrade_system):
 
     return {'status': upgrade_process.process.stdout}
 
+#testing changing timezone from web gui
+@celery.task
+def change_timezone():
+    """Change time zone"""
+    us_timezone = settings['us_timezone']
+    sh.sudo('ln', '-fs', '/usr/share/zoneinfo/' + us_timezone, '/etc/localtime', _bg=True)
+    sh.sudo('dpkg-reconfigure', '-f', 'noninteractive', 'tzdata', _bg=True)
+    #sh.sudo('shutdown', '-r', 'now', _bg=True)
 
+    
 @celery.task
 def reboot_screenly():
     """Background task to reboot Screenly-OSE."""
