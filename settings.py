@@ -44,7 +44,7 @@ DEFAULTS = {
 CONFIGURABLE_SETTINGS = DEFAULTS['viewer'].copy()
 CONFIGURABLE_SETTINGS['use_24_hour_clock'] = DEFAULTS['main']['use_24_hour_clock']
 CONFIGURABLE_SETTINGS['date_format'] = DEFAULTS['main']['date_format']
-CONFIGURABLE_SETTINGS['us_timezone'] = DEFAULTS['main']['us_timezone']
+#CONFIGURABLE_SETTINGS['us_timezone'] = DEFAULTS['main']['us_timezone']
 
 PORT = int(getenv('PORT', 8080))
 LISTEN = getenv('LISTEN', '127.0.0.1')
