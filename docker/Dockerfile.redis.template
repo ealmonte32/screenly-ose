@@ -1,3 +1,7 @@
-FROM redis:6-alpine
-COPY /tests/config/redis.conf /etc/redis/redis.conf
-CMD ["/usr/bin/redis-server", "/etc/redis/redis.conf"]
+FROM balenalib/%%BALENA_MACHINE_NAME%%-alpine:3.12-run
+
+RUN apk add --update redis && rm -rf /var/cache/apk/*
+
+COPY tests/config/redis.conf /etc/redis/redis.conf
+
+CMD ["redis-server", "/etc/redis/redis.conf"]
